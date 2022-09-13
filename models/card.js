@@ -10,7 +10,6 @@ const p = path.join(
 class Card {
     static async add(course) {
         const card = await Card.fetch()
-        console.log(card)
         const idx = card.courses.findIndex(c => c.id === course.id)
         const candidate = card.courses[idx]
 
@@ -33,6 +32,31 @@ class Card {
                         reject(err)
                     } else {
                         resolve()
+                    }
+                }
+            )
+        })
+    }
+
+    static async remove (id) {
+        const card = await Card.fetch()
+        const course = card.courses.find(c => c.id === id)
+        if (course.count === 1) {
+            card.courses = card.courses.filter(c => c.id !== id) 
+        } else {
+            course.count--
+        }
+        card.price -= course.price
+
+        return new Promise((resolve, reject) => {
+            fs.writeFile(
+                p,
+                JSON.stringify(card),
+                err => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(card)
                     }
                 }
             )
