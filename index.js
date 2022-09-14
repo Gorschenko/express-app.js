@@ -1,3 +1,5 @@
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
@@ -11,7 +13,8 @@ const app = express()
 
 const hbs = exphbs.create({
     defaultLayout: 'main',
-    extname: 'hbs'
+    extname: 'hbs',
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
 })
 
 app.engine('hbs', hbs.engine) // регестрируем hbs
@@ -30,7 +33,7 @@ const PORT = process.env.PORT || 3000
 
 const start = async () => {
     try {
-        const url = 'mongodb+srv://Gorschenko:uf7tBtVud0ef30Gk@cluster0.ynpkt15.mongodb.net/?retryWrites=true&w=majority'
+        const url = 'mongodb+srv://Gorschenko:uf7tBtVud0ef30Gk@cluster0.ynpkt15.mongodb.net/shop'
         await mongoose.connect(url, {useNewUrlParser: true})
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
