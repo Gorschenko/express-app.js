@@ -5,6 +5,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const homeRoutes = require('./routes/home')
+const ordersRoutes = require('./routes/orders')
 const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const coursesRoutes = require('./routes/courses')
@@ -24,7 +25,7 @@ app.set('views', 'views')
 
 app.use(async (req, res, next) => {
     try {
-        const user = await User.findById('')
+        const user = await User.findById('6322f3a6d03fdd13d280b048')
         req.user = user
         next()
     } catch(e) {
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/', homeRoutes)
+app.use('/orders', ordersRoutes)
 app.use('/add', addRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/card', cardRoutes)
