@@ -17,7 +17,8 @@
         <input id="img" name="img" type="text" class="validate" required>
         <label for="img">URL изображения</label>
         <span class="helper-text" data-error="Введите URL" />
-
-        <button class="btn btn-primary">Добавить курс</button>
     </div>
+    <input type="hidden" name="_csrf" value="{{csurf}}">
+        
+    <button class="btn btn-primary">Добавить курс</button>
 </form>

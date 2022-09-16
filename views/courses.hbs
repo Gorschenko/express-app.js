@@ -18,7 +18,8 @@
               <a href="/courses/{{id}}/edit?allow=true">Редактировать</a>
               <form action="/card/add" method="POST">
                  <input type="hidden" name="id" value="{{id}}">
-                 <button type="submit" class="btn btn-primary">Купить</button>
+                 <input type="hidden" name="_csrf" value="{{@root.csurf}}">
+                 <button type="submit" class="btn btn-primary" data-csurf="{{@root.csurf}}">Купить</button>
               </form>
           {{/if}}
         </div>
