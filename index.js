@@ -15,10 +15,12 @@ const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const authRoutes = require('./routes/auth')
 const coursesRoutes = require('./routes/courses')
+const profileRoutes = require('./routes/profile')
 
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 const errorMiddleware = require('./middleware/error')
+const fileMiddleware = require('./middleware/file')
 
 const MONGODB_URI = 'mongodb+srv://Gorschenko:uf7tBtVud0ef30Gk@cluster0.ynpkt15.mongodb.net/shop'
 const app = express()
@@ -37,6 +39,7 @@ app.set('view engine', 'hbs') // используем hbs
 app.set('views', 'views')
 
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({ // подключение сессий
     secret: 'some secret value',
@@ -44,6 +47,7 @@ app.use(session({ // подключение сессий
     saveUninitialized: false,
     store,
 }))
+app.use(fileMiddleware.single('avatar'))
 app.use(csurf())
 app.use(flash())
 app.use(varMiddleware)
@@ -56,6 +60,7 @@ app.use('/add', addRoutes)
 app.use('/auth', authRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/card', cardRoutes)
+app.use('/profile', profileRoutes)
 
 app.use(errorMiddleware)
 
