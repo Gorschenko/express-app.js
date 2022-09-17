@@ -4,10 +4,13 @@ const express = require('express')
 const path = require('path')
 const csurf = require('csurf') // добавление токена
 const flash = require('connect-flash') // для уведомлений
+const helmet = require('helmet') // для защиты запросов
+const compression = require('compression') // сжатие статических файлов
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars') // шаблонизатор
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session) // подключение сессий к базе данных
+const keys = require('./keys/index')
 
 const homeRoutes = require('./routes/home')
 const ordersRoutes = require('./routes/orders')
@@ -22,7 +25,7 @@ const userMiddleware = require('./middleware/user')
 const errorMiddleware = require('./middleware/error')
 const fileMiddleware = require('./middleware/file')
 
-const MONGODB_URI = 'mongodb+srv://Gorschenko:uf7tBtVud0ef30Gk@cluster0.ynpkt15.mongodb.net/shop'
+const MONGODB_URI = keys.MONGODB_URI
 const app = express()
 const hbs = exphbs.create({
     defaultLayout: 'main',
@@ -31,7 +34,7 @@ const hbs = exphbs.create({
 })
 const store = new MongoStore({ // подключение сессий к базе данных
     collection: 'sessions',
-    uri: MONGODB_URI,
+    uri: keys.MONGODB_URI,
 })
 
 app.engine('hbs', hbs.engine) // регестрируем hbs
@@ -42,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({ // подключение сессий
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store,
@@ -50,6 +53,8 @@ app.use(session({ // подключение сессий
 app.use(fileMiddleware.single('avatar'))
 app.use(csurf())
 app.use(flash())
+app.use(helmet())
+app.use(compression())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
