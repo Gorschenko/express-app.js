@@ -15,8 +15,10 @@ const cardRoutes = require('./routes/card')
 const addRoutes = require('./routes/add')
 const authRoutes = require('./routes/auth')
 const coursesRoutes = require('./routes/courses')
+
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
+const errorMiddleware = require('./middleware/error')
 
 const MONGODB_URI = 'mongodb+srv://Gorschenko:uf7tBtVud0ef30Gk@cluster0.ynpkt15.mongodb.net/shop'
 const app = express()
@@ -54,6 +56,8 @@ app.use('/add', addRoutes)
 app.use('/auth', authRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/card', cardRoutes)
+
+app.use(errorMiddleware)
 
 const PORT = process.env.PORT || 3000
 
